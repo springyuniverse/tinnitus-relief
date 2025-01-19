@@ -19,11 +19,12 @@ const TinnitusRelief = () => {
   const animationRef = useRef(null);
 
   const commonTinnitusFreqs = [
-    { name: "Low Pitch", freq: 2000 },
-    { name: "Medium Low", freq: 3000 },
-    { name: "Medium", freq: 4000 },
-    { name: "Medium High", freq: 6000 },
-    { name: "High Pitch", freq: 8000 }
+    { name: "Very Low", freq: 50 },
+    { name: "Low", freq: 1000 },
+    { name: "Medium Low", freq: 4000 },
+    { name: "Medium", freq: 8000 },
+    { name: "Medium High", freq: 12000 },
+    { name: "High", freq: 18000 }
   ];
 
   useEffect(() => {
@@ -255,8 +256,8 @@ const TinnitusRelief = () => {
           </div>
           <Slider
             value={[frequency]}
-            min={2000}
-            max={8000}
+            min={50}
+            max={18000}
             step={100}
             onValueChange={(val) => {
               setFrequency(val[0]);

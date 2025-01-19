@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import $ from 'jquery';
+window.jQuery = $;
+window.$ = $;
 
 // Add Mailchimp CSS
 const mailchimpCSS = `
@@ -12,9 +15,6 @@ const mailchimpCSS = `
 `;
 
 const StoryAndSubscribe = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
-
   useEffect(() => {
     const script = document.createElement('script');
     script.src = '//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js';
@@ -22,67 +22,26 @@ const StoryAndSubscribe = () => {
     document.body.appendChild(script);
 
     script.onload = () => {
-      window.fnames = new Array();
-      window.ftypes = new Array();
-      window.fnames[0] = 'EMAIL';
-      window.ftypes[0] = 'email';
+      window.$mcj = window.jQuery.noConflict(true);
+      
+      // Initialize Mailchimp form
+      (function($) {
+        window.fnames = new Array();
+        window.ftypes = new Array();
+        fnames[0]='EMAIL';ftypes[0]='email';
+        fnames[1]='FNAME';ftypes[1]='text';
+        fnames[2]='LNAME';ftypes[2]='text';
+        fnames[3]='ADDRESS';ftypes[3]='address';
+        fnames[4]='PHONE';ftypes[4]='phone';
+        fnames[5]='BIRTHDAY';ftypes[5]='birthday';
+        fnames[6]='COMPANY';ftypes[6]='text';
+      }(window.jQuery));
     };
 
     return () => {
       document.body.removeChild(script);
     };
   }, []);
-
-  useEffect(() => {
-    // Set up observers for Mailchimp response messages
-    const successResponse = document.getElementById('mce-success-response');
-    const errorResponse = document.getElementById('mce-error-response');
-
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList' || mutation.type === 'attributes') {
-          const target = mutation.target;
-          if (target.style.display !== 'none') {
-            setMessage({
-              type: target.id === 'mce-success-response' ? 'success' : 'error',
-              text: target.textContent
-            });
-            setIsSubmitting(false);
-          }
-        }
-      });
-    });
-
-    if (successResponse) {
-      observer.observe(successResponse, { 
-        attributes: true, 
-        childList: true,
-        characterData: true 
-      });
-    }
-    if (errorResponse) {
-      observer.observe(errorResponse, { 
-        attributes: true, 
-        childList: true,
-        characterData: true 
-      });
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const handleSubmit = (e) => {
-    if (!e.target.checkValidity()) {
-      return;
-    }
-    setIsSubmitting(true);
-    setMessage({ type: '', text: 'Subscribing...' });
-    
-    // The form will be handled by Mailchimp's backend
-    setTimeout(() => {
-      setIsSubmitting(false);
-    }, 2000); // Reset submitting state after 2s to ensure Mailchimp has time to process
-  };
 
   return (
     <Card className="w-full lg:w-[400px]">
@@ -145,15 +104,8 @@ const StoryAndSubscribe = () => {
                     className="required email mt-1"
                     id="mce-EMAIL"
                     required
-                    disabled={isSubmitting}
                   />
                 </div>
-
-                {message.text && (
-                  <div className={`text-sm ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-                    {message.text}
-                  </div>
-                )}
 
                 <div id="mce-responses" className="hidden">
                   <div className="response" id="mce-error-response" style={{ display: 'none' }}></div>
@@ -172,20 +124,13 @@ const StoryAndSubscribe = () => {
 
                 <div className="optionalParent">
                   <div className="clear foot">
-                    <button
+                    <input
                       type="submit"
                       name="subscribe"
                       id="mc-embedded-subscribe"
-                      className={`button w-full transition-all duration-200 transform shadow-sm
-                        ${isSubmitting 
-                          ? 'opacity-50 cursor-not-allowed' 
-                          : 'cursor-pointer hover:bg-primary/90 hover:scale-[1.02] hover:shadow-md active:scale-[0.98] active:shadow-sm'
-                        }`}
-                      disabled={isSubmitting}
-                      onClick={handleSubmit}
-                    >
-                      {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-                    </button>
+                      className="button"
+                      value="Subscribe"
+                    />
                     <p className="mt-4 text-center">
                       <a href="http://eepurl.com/i76P5I" title="Mailchimp - email marketing made easy and fun">
                         <span className="inline-block bg-transparent rounded-lg">
