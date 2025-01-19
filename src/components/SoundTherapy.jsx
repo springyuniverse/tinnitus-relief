@@ -4,7 +4,7 @@ import { Slider } from './ui/slider';
 import { Button } from './ui/button';
 import { Volume2, VolumeX } from 'lucide-react';
 
-const TinnitusRelief = () => {
+const SoundTherapy = () => {
   const [audioContext, setAudioContext] = useState(null);
   const [source, setSource] = useState(null);
   const [gainNode, setGainNode] = useState(null);
@@ -240,7 +240,7 @@ const TinnitusRelief = () => {
   return (
     <Card className="w-full lg:w-[600px]">
       <CardHeader>
-        <CardTitle>Enhanced Tinnitus Sound Relief</CardTitle>
+        <CardTitle>Tinny Calm Sound Therapy</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <canvas 
@@ -389,4 +389,4 @@ const TinnitusRelief = () => {
   );
 };
 
-export default TinnitusRelief;
+export default SoundTherapy;

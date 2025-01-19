@@ -1,6 +1,6 @@
-# Tinnitus Relief Web App
+# Tinny Calm
 
-A web application designed to provide sound therapy and relief for individuals experiencing tinnitus. Built with React and the Web Audio API.
+A web application designed to provide personalized sound therapy and relief for individuals experiencing tinnitus. Built with React and the Web Audio API.
 
 ## Features
 
